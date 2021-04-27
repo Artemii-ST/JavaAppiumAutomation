@@ -16,7 +16,7 @@ public void setUp() throws Exception {
     capabilities.setCapability("deviceName","OnePlus");
     capabilities.setCapability("platformVersion","10");
     capabilities.setCapability("automationName","Appium");
-    capabilities.setCapability("appPackage","org.Wikipedia");
+    capabilities.setCapability("appPackage","org.wikipedia");
     capabilities.setCapability("appActivity",".main.MainActivity");
     capabilities.setCapability("app","/users/artem/Desktop/JavaAppiumAutomation/apks/org.wikipedia.apk");
 
