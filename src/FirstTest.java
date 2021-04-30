@@ -167,7 +167,7 @@ public void firstTest(){
         String article_title = title_element.getAttribute("text");
         Assert.assertEquals(
                 "expected text not found",
-                "JavaServer Pages",
+                "JavaServer Pages;",
                 article_title
         );
     }
@@ -205,5 +205,6 @@ public void firstTest(){
         webElement.clear();
         return webElement;
     }
+
 
 }
