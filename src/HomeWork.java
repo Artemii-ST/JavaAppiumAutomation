@@ -56,24 +56,63 @@ public class HomeWork {
 
     }
 
+    @Test
+    public void cancelSearch() {
+        waitForElementByAndClick(
+                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+                "error: element skip_button - not found",
+                5
+        );
+
+        waitForElementByAndClick(
+                By.xpath("//*[contains(@text, 'Поиск по Википедии')]"),
+                "error: text - Поиск по Википедии - not found",
+                5
+        );
+        waitForElementByAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                "java",
+                "error - not entered value",
+                15
+        );
+        waitForElementPresentBy(
+                By.xpath("//*[@text='JavaServer Pages']"),
+                "error: JavaServer Pages - not found",
+                15
+        );
+        waitForElementByAndClick(
+                By.id("org.wikipedia:id/search_close_btn"),
+                "error: search form is not closed",
+                5
+        );
+        waitForElementNotPresentBy(
+                By.id("org.wikipedia:id/search_close_btn"),
+                "error: element for close search form enabled",
+                5
+        );
+
+
+    }
+
     //========================Methods=====================================
 
 
-    private WebElement waitForElementByAndClick(By by, String error_message, long timeoutInSecond){
-        WebElement webElement = waitForElementPresentBy(by,error_message,timeoutInSecond);
+    private WebElement waitForElementByAndClick(By by, String error_message, long timeoutInSecond) {
+        WebElement webElement = waitForElementPresentBy(by, error_message, timeoutInSecond);
         webElement.click();
         return webElement;
     }
-    private WebElement waitForElementPresentBy(By by, String error_message, long timeoutInSecond){
+
+    private WebElement waitForElementPresentBy(By by, String error_message, long timeoutInSecond) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSecond);
         wait.withMessage(error_message + "\n");
         return wait.until(
                 ExpectedConditions.presenceOfElementLocated(by)
         );
     }
-    private WebElement assertElementHasText(By by, String expected, String error_message, long timeoutInSecond)
-    {
-        WebElement input_search_title = waitForElementPresentBy(by,error_message,timeoutInSecond);
+
+    private WebElement assertElementHasText(By by, String expected, String error_message, long timeoutInSecond) {
+        WebElement input_search_title = waitForElementPresentBy(by, error_message, timeoutInSecond);
         String actual_input = input_search_title.getAttribute("text");
         Assert.assertEquals(
                 "error :" + " " + expected + " " + "not correctly",
@@ -83,4 +122,18 @@ public class HomeWork {
         return input_search_title;
     }
 
+    private WebElement waitForElementByAndSendKeys(By by, String value, String error_message, long timeoutInSecond) {
+        WebElement webElement = waitForElementPresentBy(by, error_message, timeoutInSecond);
+        webElement.sendKeys(value);
+        return webElement;
+    }
+
+    private Boolean waitForElementNotPresentBy(By by, String error_message, long timeoutInSecond) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSecond);
+        wait.withMessage(error_message + "\n");
+        return wait.until(
+                ExpectedConditions.invisibilityOfElementLocated(by)
+        );
+
+    }
 }
