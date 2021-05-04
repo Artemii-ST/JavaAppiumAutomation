@@ -11,6 +11,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HomeWork {
     private AppiumDriver driver;
@@ -93,9 +95,55 @@ public class HomeWork {
 
 
     }
+    @Test
+    public void checkWordInSearch() {
+        waitForElementByAndClick(
+                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+                "error: element skip_button - not found",
+                5
+        );
+
+        waitForElementByAndClick(
+                By.xpath("//*[contains(@text, 'Поиск по Википедии')]"),
+                "error: text - Поиск по Википедии - not found",
+                5
+        );
+        waitForElementByAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                "java",
+                "error - not entered value",
+                15
+        );
+        List<WebElement> list = waitForElementsPresentBy(
+                By.id("org.wikipedia:id/page_list_item_title"),
+                "error - list not found",
+                15
+        );
+        boolean result = CheckHaveWordInSearchResult(list);
+        Assert.assertTrue("Not all elements have word Java",result);
+    }
 
     //========================Methods=====================================
 
+    private boolean CheckHaveWordInSearchResult(List<WebElement> webElement) {
+        boolean result;
+        int count =0;
+        ArrayList<String> list = new ArrayList<>();
+        for (int x=0; x<webElement.size(); x++) {
+            list.add(webElement.get(x).getText());
+        }
+        for (int x=0; x<webElement.size(); x++) {
+            int indexJava = list.get(x).indexOf("Java");
+            if(indexJava == - 1) {
+            } else {
+                count++;
+            }
+        }
+        if (count == webElement.size())
+            result = true;
+        else result = false;
+return result;
+    }
 
     private WebElement waitForElementByAndClick(By by, String error_message, long timeoutInSecond) {
         WebElement webElement = waitForElementPresentBy(by, error_message, timeoutInSecond);
@@ -108,6 +156,13 @@ public class HomeWork {
         wait.withMessage(error_message + "\n");
         return wait.until(
                 ExpectedConditions.presenceOfElementLocated(by)
+        );
+    }
+    private List<WebElement> waitForElementsPresentBy(By by, String error_message, long timeoutInSecond) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSecond);
+        wait.withMessage(error_message + "\n");
+        return wait.until(
+                ExpectedConditions.presenceOfAllElementsLocatedBy(by)
         );
     }
 
