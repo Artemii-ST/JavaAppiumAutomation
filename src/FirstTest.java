@@ -1,10 +1,13 @@
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.touch.offset.PointOption;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -171,8 +174,50 @@ public void firstTest(){
                 article_title
         );
     }
+    @Test
+    public void testSwipeUp(){
+        waitForElementByAndClick(
+                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+                "error: element skip_button - not found",
+                5
+        );
 
-//==========================================================================
+        waitForElementByAndClick(
+                By.xpath("//*[contains(@text, 'Поиск по Википедии')]"),
+                "error: text - Поиск по Википедии - not found",
+                5
+        );
+
+        waitForElementByAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                "java",
+                "error - not entered value",
+                15
+        );
+
+        waitForElementByAndClick(
+                By.xpath("//*[@text='JavaServer Pages']"),
+                "error: JavaServer Pages - not found",
+                15
+        );
+        swipeUp(2000);
+        swipeUp(2000);
+        swipeUp(2000);
+        swipeUp(2000);
+    }
+
+//============================Methods==============================================
+
+    protected void swipeUp(int timeOfSwipe){
+        TouchAction action = new TouchAction(driver);
+        Dimension size = driver.manage().window().getSize();
+        int x = size.height / 2;
+        int start_y = (int) (size.height * 0.8);
+        int end_y = (int) (size.width * 0.2);
+
+        action.press(x, start_y).waitAction(timeOfSwipe).moveTo(x, end_y).release().perform();
+
+    }
 
     private Boolean waitForElementNotPresentBy(By by, String error_message, long timeoutInSecond){
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSecond);
