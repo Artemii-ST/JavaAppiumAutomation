@@ -1,69 +1,69 @@
-import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.TouchAction;
-import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.touch.WaitOptions;
-import io.appium.java_client.touch.offset.PointOption;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+ import io.appium.java_client.AppiumDriver;
+        import io.appium.java_client.TouchAction;
+        import io.appium.java_client.android.AndroidDriver;
+        import io.appium.java_client.touch.WaitOptions;
+        import io.appium.java_client.touch.offset.PointOption;
+        import org.junit.After;
+        import org.junit.Assert;
+        import org.junit.Before;
+        import org.junit.Test;
+        import org.openqa.selenium.By;
+        import org.openqa.selenium.Dimension;
+        import org.openqa.selenium.WebElement;
+        import org.openqa.selenium.remote.DesiredCapabilities;
+        import org.openqa.selenium.support.ui.ExpectedConditions;
+        import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.net.URL;
-import java.time.Duration;
-import java.util.List;
+        import java.net.URL;
+        import java.time.Duration;
+        import java.util.List;
 
 public class FirstTest {
     private AppiumDriver driver;
     @Before
-public void setUp() throws Exception {
-    DesiredCapabilities capabilities = new DesiredCapabilities();
-    capabilities.setCapability("platformName","Android");
-    capabilities.setCapability("deviceName","OnePlus");
-    capabilities.setCapability("platformVersion","10");
-    capabilities.setCapability("automationName","Appium");
-    capabilities.setCapability("appPackage","org.wikipedia");
-    capabilities.setCapability("appActivity",".main.MainActivity");
-    capabilities.setCapability("app","/users/artem/Desktop/JavaAppiumAutomation/apks/org.wikipedia.apk");
+    public void setUp() throws Exception {
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+        capabilities.setCapability("platformName","Android");
+        capabilities.setCapability("deviceName","OnePlus");
+        capabilities.setCapability("platformVersion","10");
+        capabilities.setCapability("automationName","Appium");
+        capabilities.setCapability("appPackage","org.wikipedia");
+        capabilities.setCapability("appActivity",".main.MainActivity");
+        capabilities.setCapability("app","/users/artem/Desktop/JavaAppiumAutomation/apks/org.wikipedia.apk");
 
-    driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
-}
-@After
-public void tearDown(){
-    driver.quit();
-}
-@Test
-public void firstTest(){
-    waitForElementByAndClick(
-            By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
-            "error: element skip_button - not found",
-            5
-    );
+        driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
+    }
+    @After
+    public void tearDown(){
+        driver.quit();
+    }
+    @Test
+    public void firstTest(){
+        waitForElementByAndClick(
+                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+                "error: element skip_button - not found",
+                5
+        );
 
-    waitForElementByAndClick(
-            By.xpath("//*[contains(@text, 'Поиск по Википедии')]"),
-            "error: text - Поиск по Википедии - not found",
-            5
-    );
+        waitForElementByAndClick(
+                By.xpath("//*[contains(@text, 'Поиск по Википедии')]"),
+                "error: text - Поиск по Википедии - not found",
+                5
+        );
 
-    waitForElementByAndSendKeys(
-            By.id("org.wikipedia:id/search_src_text"),
-            "java",
-            "error - not entered value",
-            15
-    );
+        waitForElementByAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                "java",
+                "error - not entered value",
+                15
+        );
 
-    waitForElementPresentBy(
-            By.xpath("//*[@text='JavaServer Pages']"),
-            "error: JavaServer Pages - not found",
-            15
-    );
-}
+        waitForElementPresentBy(
+                By.xpath("//*[@text='JavaServer Pages']"),
+                "error: JavaServer Pages - not found",
+                15
+        );
+    }
     @Test
     public void cancelSearch(){
         waitForElementByAndClick(
@@ -169,7 +169,7 @@ public void firstTest(){
                 By.xpath("//*[@text='JavaServer Pages']"),
                 "error: JavaServer Pages - not open",
                 15
-                );
+        );
         String article_title = title_element.getAttribute("text");
         Assert.assertEquals(
                 "expected text not found",
@@ -211,7 +211,7 @@ public void firstTest(){
         swipeScreen(Direction.UP);
         swipeScreen(Direction.UP);
     }
-    @Test
+    @Test // Поиск элемента на экране - делаем свайпы до тех пор пока нужный элемент не покажется на экране
     public void swipeUpToFindElementInPage(){
         waitForElementByAndClick(
                 By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
@@ -232,17 +232,11 @@ public void firstTest(){
                 15
         );
 
-//        waitForElementByAndClick(
-//                By.xpath("//*[@text='JavaServer Pages']"),
-//                "error: JavaServer Pages - not found",
-//                15
-//        );
         swipeUpToFindElement(
                 By.xpath("//*[@text='JavaMail']"),
                 //By.id("Директива_JSP_taglib"),
                 "error: Директива_JSP_taglib - not found",
-                15,
-                10
+                5
         );
 
 
@@ -250,77 +244,78 @@ public void firstTest(){
 
     }
 
-//============================Methods==============================================
-    protected void swipeUpToFindElement(By by, String error_message, long timeoutInSecond, int maxSwipe){
-        int countSwipe;
-        for (countSwipe = 0; countSwipe<maxSwipe; countSwipe++){
-            if (countSwipe>maxSwipe) {
-                waitForElementPresentBy(by, "BLYADSTVO", timeoutInSecond);
-                break;
+    //============================Methods==============================================
+    protected void swipeUpToFindElement(By by, String error_message, int max_swipes){
+        int already_swiped = 0;
+        while (driver.findElements(by).size() == 0){
+
+            if(already_swiped > max_swipes){
+                waitForElementPresentBy(by, "Cannot finde element by swiping up. \b" + error_message, 0);
             }
             swipeScreen(Direction.UP);
+            already_swiped++;
         }
 
     }
 
 
-protected void swipeScreen(Direction dir) {
-    System.out.println("swipeScreen(): dir: '" + dir + "'"); // always log your actions
+    public void swipeScreen(Direction dir) {
+        System.out.println("swipeScreen(): dir: '" + dir + "'"); // always log your actions
 
-    // Animation default time:
-    //  - Android: 300 ms
-    //  - iOS: 200 ms
-    // final value depends on your app and could be greater
-    final int ANIMATION_TIME = 2000; // ms
+        // Animation default time:
+        //  - Android: 300 ms
+        //  - iOS: 200 ms
+        // final value depends on your app and could be greater
+        final int ANIMATION_TIME = 2000; // ms
 
-    final int PRESS_TIME = 2000; // ms
+        final int PRESS_TIME = 2000; // ms
 
-    int edgeBorder = 10; // better avoid edges
-    PointOption pointOptionStart, pointOptionEnd;
+        int edgeBorder = 10; // better avoid edges
+        PointOption pointOptionStart, pointOptionEnd;
 
-    // init screen variables
-    Dimension dims = driver.manage().window().getSize();
+        // init screen variables
+        Dimension dims = driver.manage().window().getSize();
 
-    // init start point = center of screen
-    pointOptionStart = PointOption.point(dims.width / 2, dims.height / 2);
+        // init start point = center of screen
+        pointOptionStart = PointOption.point(dims.width / 2, dims.height / 2);
 
-    switch (dir) {
-        case DOWN: // center of footer
-            pointOptionEnd = PointOption.point(dims.width / 2, dims.height - edgeBorder);
-            break;
-        case UP: // center of header
-            pointOptionEnd = PointOption.point(dims.width / 2, edgeBorder);
-            break;
-        case LEFT: // center of left side
-            pointOptionEnd = PointOption.point(edgeBorder, dims.height / 2);
-            break;
-        case RIGHT: // center of right side
-            pointOptionEnd = PointOption.point(dims.width - edgeBorder, dims.height / 2);
-            break;
-        default:
-            throw new IllegalArgumentException("swipeScreen(): dir: '" + dir + "' NOT supported");
+        switch (dir) {
+            case DOWN: // center of footer
+                pointOptionEnd = PointOption.point(dims.width / 2, dims.height - edgeBorder);
+                break;
+            case UP: // center of header
+                pointOptionEnd = PointOption.point(dims.width / 2, edgeBorder);
+                break;
+            case LEFT: // center of left side
+                pointOptionEnd = PointOption.point(edgeBorder, dims.height / 2);
+                break;
+            case RIGHT: // center of right side
+                pointOptionEnd = PointOption.point(dims.width - edgeBorder, dims.height / 2);
+                break;
+            default:
+                throw new IllegalArgumentException("swipeScreen(): dir: '" + dir + "' NOT supported");
+        }
+
+        // execute swipe using TouchAction
+        try {
+            new TouchAction(driver)
+                    .press(pointOptionStart)
+                    // a bit more reliable when we add small wait
+                    .waitAction(WaitOptions.waitOptions(Duration.ofMillis(PRESS_TIME)))
+                    .moveTo(pointOptionEnd)
+                    .release().perform();
+        } catch (Exception e) {
+            System.err.println("swipeScreen(): TouchAction FAILED\n" + e.getMessage());
+            return;
+        }
+
+        // always allow swipe action to complete
+        try {
+            Thread.sleep(ANIMATION_TIME);
+        } catch (InterruptedException e) {
+            // ignore
+        }
     }
-
-    // execute swipe using TouchAction
-    try {
-        new TouchAction(driver)
-                .press(pointOptionStart)
-                // a bit more reliable when we add small wait
-                .waitAction(WaitOptions.waitOptions(Duration.ofMillis(PRESS_TIME)))
-                .moveTo(pointOptionEnd)
-                .release().perform();
-    } catch (Exception e) {
-        System.err.println("swipeScreen(): TouchAction FAILED\n" + e.getMessage());
-        return;
-    }
-
-    // always allow swipe action to complete
-    try {
-        Thread.sleep(ANIMATION_TIME);
-    } catch (InterruptedException e) {
-        // ignore
-    }
-}
 
     public enum Direction {
         UP,
