@@ -211,7 +211,7 @@ public void firstTest(){
         swipeScreen(Direction.UP);
         swipeScreen(Direction.UP);
     }
-    @Test // Поиск элемента на экране - делаем свайпы до тех пор пока нужный элемент не покажется на экране
+    @Test
     public void swipeUpToFindElementInPage(){
         waitForElementByAndClick(
                 By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
@@ -241,7 +241,8 @@ public void firstTest(){
                 By.xpath("//*[@text='JavaMail']"),
                 //By.id("Директива_JSP_taglib"),
                 "error: Директива_JSP_taglib - not found",
-                5
+                15,
+                10
         );
 
 
@@ -250,21 +251,20 @@ public void firstTest(){
     }
 
 //============================Methods==============================================
-    protected void swipeUpToFindElement(By by, String error_message, int max_swipes){
-        int already_swiped = 0;
-        while (driver.findElements(by).size() == 0){
-
-            if(already_swiped > max_swipes){
-                waitForElementPresentBy(by, "Cannot finde element by swiping up. \b" + error_message, 0);
+    protected void swipeUpToFindElement(By by, String error_message, long timeoutInSecond, int maxSwipe){
+        int countSwipe;
+        for (countSwipe = 0; countSwipe<maxSwipe; countSwipe++){
+            if (countSwipe>maxSwipe) {
+                waitForElementPresentBy(by, "BLYADSTVO", timeoutInSecond);
+                break;
             }
             swipeScreen(Direction.UP);
-            already_swiped++;
         }
 
     }
 
 
-public void swipeScreen(Direction dir) {
+protected void swipeScreen(Direction dir) {
     System.out.println("swipeScreen(): dir: '" + dir + "'"); // always log your actions
 
     // Animation default time:
