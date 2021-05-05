@@ -16,6 +16,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
 import java.time.Duration;
+import java.util.List;
 
 public class FirstTest {
     private AppiumDriver driver;
@@ -172,7 +173,7 @@ public void firstTest(){
         String article_title = title_element.getAttribute("text");
         Assert.assertEquals(
                 "expected text not found",
-                "JavaServer Pages;",
+                "JavaServer Pages",
                 article_title
         );
     }
@@ -210,8 +211,59 @@ public void firstTest(){
         swipeScreen(Direction.UP);
         swipeScreen(Direction.UP);
     }
+    @Test // Поиск элемента на экране - делаем свайпы до тех пор пока нужный элемент не покажется на экране
+    public void swipeUpToFindElementInPage(){
+        waitForElementByAndClick(
+                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+                "error: element skip_button - not found",
+                5
+        );
+
+        waitForElementByAndClick(
+                By.xpath("//*[contains(@text, 'Поиск по Википедии')]"),
+                "error: text - Поиск по Википедии - not found",
+                5
+        );
+
+        waitForElementByAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                "java",
+                "error - not entered value",
+                15
+        );
+
+//        waitForElementByAndClick(
+//                By.xpath("//*[@text='JavaServer Pages']"),
+//                "error: JavaServer Pages - not found",
+//                15
+//        );
+        swipeUpToFindElement(
+                By.xpath("//*[@text='JavaMail']"),
+                //By.id("Директива_JSP_taglib"),
+                "error: Директива_JSP_taglib - not found",
+                5
+        );
+
+
+
+
+    }
 
 //============================Methods==============================================
+    protected void swipeUpToFindElement(By by, String error_message, int max_swipes){
+        int already_swiped = 0;
+        while (driver.findElements(by).size() == 0){
+
+            if(already_swiped > max_swipes){
+                waitForElementPresentBy(by, "Cannot finde element by swiping up. \b" + error_message, 0);
+            }
+            swipeScreen(Direction.UP);
+            already_swiped++;
+        }
+
+    }
+
+
 public void swipeScreen(Direction dir) {
     System.out.println("swipeScreen(): dir: '" + dir + "'"); // always log your actions
 
@@ -304,6 +356,13 @@ public void swipeScreen(Direction dir) {
         wait.withMessage(error_message + "\n");
         return wait.until(
                 ExpectedConditions.presenceOfElementLocated(by)
+        );
+    }
+    private List<WebElement> waitForElementsPresentBy(By by, String error_message, long timeoutInSecond){
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSecond);
+        wait.withMessage(error_message + "\n");
+        return wait.until(
+                ExpectedConditions.presenceOfAllElementsLocatedBy(by)
         );
     }
 
