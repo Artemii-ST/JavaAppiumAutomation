@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.ScreenOrientation;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -37,7 +38,7 @@ public class FirstTest {
     }
     @After
     public void tearDown(){
-        //driver.quit();
+        driver.quit();
     }
     @Test
     public void firstTest(){
@@ -405,9 +406,72 @@ public class FirstTest {
         );
 
     }
+    @Test
+    //Ротация экрана и проверка атрибутов элемента до ротации и после.
+    public void testCompareArticleTitleAndRotate(){
+        waitForElementByAndClick(
+                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+                "error: element skip_button - not found",
+                5
+        );
+
+        waitForElementByAndClick(
+                By.xpath("//*[contains(@text, 'Поиск по Википедии')]"),
+                "error: text - Поиск по Википедии - not found",
+                5
+        );
+
+        waitForElementByAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                "java",
+                "error - not entered value",
+                15
+        );
+
+        waitForElementByAndClick(
+                By.xpath("//*[@text='JavaServer Pages']"),
+                "error: JavaServer Pages - not found",
+                15
+        );
+        String beforeRotate = waitForElementAndGetAttribute(
+                By.xpath("//*[@text='JavaServer Pages']"),
+                "text",
+                "error: JavaServer Pages - not found"
+        );
+
+        driver.rotate(ScreenOrientation.LANDSCAPE);
+
+        String afterRotate = waitForElementAndGetAttribute(
+                By.xpath("//*[@text='JavaServer Pages']"),
+                "text",
+                "error: JavaServer Pages - not found"
+        );
+        Assert.assertEquals(
+                "elemets " + beforeRotate + " and " + afterRotate + " not Equals",
+                beforeRotate,
+                afterRotate
+        );
+
+        driver.rotate(ScreenOrientation.PORTRAIT);
+
+        String afterRotate_second_rotate = waitForElementAndGetAttribute(
+                By.xpath("//*[@text='JavaServer Pages']"),
+                "text",
+                "error: JavaServer Pages - not found"
+        );
+        Assert.assertEquals(
+                "elemets " + beforeRotate + " and " + afterRotate_second_rotate + " not Equals",
+                beforeRotate,
+                afterRotate_second_rotate
+        );
+
+    }
 
     //============================Methods==============================================
-
+    private String waitForElementAndGetAttribute (By by, String attribute, String error_message){
+        String attributeElement = waitForElementPresentBy(by, error_message, 10).getAttribute(attribute);
+        return attributeElement;
+    }
 
     private void assertElementNotPresent(By by, String error_message) throws InterruptedException {
             int amount_of_elements = getAmountOfElements(by);
