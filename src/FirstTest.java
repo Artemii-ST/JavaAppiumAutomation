@@ -341,7 +341,7 @@ public class FirstTest {
     }
     @Test
     //Поиск списка элементов в выдаче поиска - и сравнение результата через Assert - если результатов больше нуля то тест пройден
-    public void testAmountOfNotEmptySearch() {
+    public void testAmountOfNotEmptySearch() throws InterruptedException {
         waitForElementByAndClick(
                 By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
                 "error: element skip_button - not found",
@@ -370,10 +370,56 @@ public class FirstTest {
         );
 
     }
+    @Test
+    //Тест который проверяет что у поискового запроса нет найденых элементов
+    // проверка 1 - то что отображается элемент что ничего не найдено - или
+    // проверка 2 - если найден какой либо элемент по поисковому запросу - будет ошибка
+    public void testAmountOfEmptySearch() throws InterruptedException {
+        waitForElementByAndClick(
+                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+                "error: element skip_button - not found",
+                5
+        );
+
+        waitForElementByAndClick(
+                By.xpath("//*[contains(@text, 'Поиск по Википедии')]"),
+                "error: text - Поиск по Википедии - not found",
+                5
+        );
+
+        waitForElementByAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                "qweasdzxc",
+                "error - not entered value",
+                15
+        );
+        waitForElementPresentBy(
+                By.xpath("//*[contains(@text, 'Ничего не найдено')]"),
+                "error: text - Ничего не найдено - not found",
+                5
+        );
+
+        assertElementNotPresent(
+                By.id("org.wikipedia:id/page_list_item_title"),
+                "Element list item found"
+        );
+
+    }
 
     //============================Methods==============================================
-    protected int getAmountOfElements(By by){
-        List elements = waitForElementsPresentBy(by,"Element not found", 5);
+
+
+    private void assertElementNotPresent(By by, String error_message) throws InterruptedException {
+            int amount_of_elements = getAmountOfElements(by);
+            if(amount_of_elements > 0){
+                String default_message = "An element " + by.toString() + " supposed to be not present";
+                throw new AssertionError(default_message + " " + error_message);
+            }
+    }
+
+    private int getAmountOfElements(By by) throws InterruptedException {
+        Thread.sleep(2000);
+        List elements = driver.findElements(by);
         return elements.size();
     }
 protected void swipeElementToLeft(By by, String error_message){
