@@ -1,22 +1,24 @@
- import io.appium.java_client.AppiumDriver;
-        import io.appium.java_client.TouchAction;
-        import io.appium.java_client.android.AndroidDriver;
-        import io.appium.java_client.touch.WaitOptions;
-        import io.appium.java_client.touch.offset.PointOption;
-        import org.junit.After;
-        import org.junit.Assert;
-        import org.junit.Before;
-        import org.junit.Test;
-        import org.openqa.selenium.By;
-        import org.openqa.selenium.Dimension;
-        import org.openqa.selenium.WebElement;
-        import org.openqa.selenium.remote.DesiredCapabilities;
-        import org.openqa.selenium.support.ui.ExpectedConditions;
-        import org.openqa.selenium.support.ui.WebDriverWait;
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.TouchAction;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.touch.WaitOptions;
+import io.appium.java_client.touch.offset.PointOption;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
-        import java.net.URL;
-        import java.time.Duration;
-        import java.util.List;
+import java.net.URL;
+import java.time.Duration;
+import java.util.List;
+
+import static java.time.Duration.ofMillis;
 
 public class FirstTest {
     private AppiumDriver driver;
@@ -35,7 +37,7 @@ public class FirstTest {
     }
     @After
     public void tearDown(){
-        driver.quit();
+        //driver.quit();
     }
     @Test
     public void firstTest(){
@@ -243,8 +245,119 @@ public class FirstTest {
 
 
     }
+    @Test
+    public void AddArticleToBookmarkAndRemove(){
+        waitForElementByAndClick(
+                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+                "error: element skip_button - not found",
+                5
+        );
+
+        waitForElementByAndClick(
+                By.xpath("//*[contains(@text, 'Поиск по Википедии')]"),
+                "error: text - Поиск по Википедии - not found",
+                5
+        );
+
+        waitForElementByAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                "java",
+                "error - not entered value",
+                15
+        );
+
+        waitForElementByAndClick(
+                By.xpath("//*[@text='JavaServer Pages']"),
+                "error: JavaServer Pages - not found",
+                15
+        );
+        waitForElementByAndClick(
+                By.id("org.wikipedia:id/article_menu_bookmark"),
+                "error: Cannot find element bookmark",
+                15
+        );
+        waitForElementByAndClick(
+                By.xpath("//*[@text='ДОБАВИТЬ В СПИСОК']"),
+                "error: Cannot find element bookmark",
+                15
+        );
+        waitForElementByAndSendKeys(
+                By.id("org.wikipedia:id/text_input"),
+                "java tutorial",
+                "error - Cannot find input element",
+                15
+        );
+        waitForElementByAndClick(
+                By.xpath("//*[@text='ОК']"),
+                "error: Cannot find element button OK",
+                15
+        );
+        waitForElementByAndClick(
+                By.className("android.widget.ImageButton"),
+                "error: element go to back not found",
+                5
+        );
+        waitForElementByAndClick(
+                By.className("android.widget.ImageButton"),
+                "error: element go to back not found",
+                5
+        );
+        waitForElementByAndClick(
+                By.xpath("//*[@content-desc='Сохранено']"),
+                "error: Cannot find element - Сохранено",
+                15
+        );
+        waitForElementByAndClick(
+                By.xpath("//*[@content-desc='Сохранено']"),
+                "error: Cannot find element - Сохранено",
+                15
+        );
+        waitForElementByAndClick(
+                By.xpath("//*[@text='java tutorial']"),
+                "error: Cannot find element - java tutorial",
+                15
+        );
+        waitForElementPresentBy(
+                By.xpath("//*[@text='JavaServer Pages']"),
+                "error: Cannot find element - JavaServer Pages in bookmark",
+                15
+        );
+        //swipe
+        swipeElementToLeft(
+                By.xpath("//*[@text='JavaServer Pages']"),
+                "error: NE SWAYPITSYA"
+        );
+        //
+        waitForElementNotPresentBy(
+                By.xpath("//*[@text='JavaServer Pages']"),
+                "error: Script find element - JavaServer Pages in bookmark",
+                15
+        );
+
+
+
+    }
 
     //============================Methods==============================================
+protected void swipeElementToLeft(By by, String error_message){
+        WebElement element = waitForElementPresentBy(by, error_message, 10);
+        int left_x = element.getLocation().getX();
+        int right_x = left_x + element.getSize().getWidth();
+        int upper_y = element.getLocation().getY();
+        int lower_y = upper_y + element.getSize().getHeight();
+        int middle_y = (upper_y + lower_y) / 2;
+        int border = 10;
+
+    TouchAction action = new TouchAction(driver);
+    action
+            .press(PointOption.point(right_x -border,middle_y))
+            .waitAction(WaitOptions.waitOptions(ofMillis(2000)))
+            .moveTo(PointOption.point(left_x - border, middle_y))
+            .release()
+            .perform();
+
+}
+
     protected void swipeUpToFindElement(By by, String error_message, int max_swipes){
         int already_swiped = 0;
         while (driver.findElements(by).size() == 0){
@@ -301,7 +414,7 @@ public class FirstTest {
             new TouchAction(driver)
                     .press(pointOptionStart)
                     // a bit more reliable when we add small wait
-                    .waitAction(WaitOptions.waitOptions(Duration.ofMillis(PRESS_TIME)))
+                    .waitAction(WaitOptions.waitOptions(ofMillis(PRESS_TIME)))
                     .moveTo(pointOptionEnd)
                     .release().perform();
         } catch (Exception e) {
@@ -334,7 +447,12 @@ public class FirstTest {
         int end_y = (int) (size.width * 0.2);
 
         //action.press(x, start_y).waitAction(timeOfSwipe).moveTo(x, end_y).release().perform();
-        action.tap(PointOption.point(x,start_y)).waitAction(WaitOptions.waitOptions(Duration.ofSeconds(timeOfSwipe))).moveTo(PointOption.point(x,end_y)).release().perform();
+        action
+                .tap(PointOption.point(x,start_y))
+                .waitAction(WaitOptions.waitOptions(Duration.ofSeconds(timeOfSwipe)))
+                .moveTo(PointOption.point(x,end_y))
+                .release()
+                .perform();
 
     }
 
