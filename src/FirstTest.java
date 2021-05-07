@@ -466,6 +466,49 @@ public class FirstTest {
         );
 
     }
+    @Test
+    // Сворачивание приложения - и проверка наличия элемента после разворачивания.
+    // Тест не рабочий - приложение с ворачивается и падает с ошибкой (502 строка)
+    //org.openqa.selenium.WebDriverException: An unknown server-side error occurred while processing the command.
+    // Original error: Could not get focusPackageAndActivity.
+    // Original error: Could not parse activity from dumpsys (WARNING: The server did not provide any stacktrace information)
+    //Command duration or timeout: 0 milliseconds
+    public void checkRunAppInBackgroundAndCheckTitleArticle(){
+        waitForElementByAndClick(
+                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+                "error: element skip_button - not found",
+                5
+        );
+
+        waitForElementByAndClick(
+                By.xpath("//*[contains(@text, 'Поиск по Википедии')]"),
+                "error: text - Поиск по Википедии - not found",
+                5
+        );
+
+        waitForElementByAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                "java",
+                "error - not entered value",
+                15
+        );
+
+        waitForElementPresentBy(
+                By.xpath("//*[@text='JavaServer Pages']"),
+                "error: JavaServer Pages - not found",
+                15
+        );
+
+        driver.runAppInBackground(Duration.ofSeconds(12));
+
+
+
+        waitForElementPresentBy(
+                By.xpath("//*[@text='JavaServer Pages']"),
+                "error: JavaServer Pages - not found",
+                15
+        );
+    }
 
     //============================Methods==============================================
     private String waitForElementAndGetAttribute (By by, String attribute, String error_message){
