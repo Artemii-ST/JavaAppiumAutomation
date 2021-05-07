@@ -246,6 +246,8 @@ public class FirstTest {
 
     }
     @Test
+    //Добавление статьи в закладки - а затем удаление ее из закладок при помощи свайпа нужного элемента
+    //затем проверка того что удаленный элемент пропал с экрана
     public void AddArticleToBookmarkAndRemove(){
         waitForElementByAndClick(
                 By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
@@ -337,8 +339,43 @@ public class FirstTest {
 
 
     }
+    @Test
+    //Поиск списка элементов в выдаче поиска - и сравнение результата через Assert - если результатов больше нуля то тест пройден
+    public void testAmountOfNotEmptySearch() {
+        waitForElementByAndClick(
+                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+                "error: element skip_button - not found",
+                5
+        );
+
+        waitForElementByAndClick(
+                By.xpath("//*[contains(@text, 'Поиск по Википедии')]"),
+                "error: text - Поиск по Википедии - not found",
+                5
+        );
+
+        waitForElementByAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Moscow",
+                "error - not entered value",
+                15
+        );
+        int amountResult = getAmountOfElements(
+                By.id("org.wikipedia:id/page_list_item_title")
+
+        );
+        Assert.assertTrue(
+                "amountResult isNot bigger than null",
+                amountResult > 0
+        );
+
+    }
 
     //============================Methods==============================================
+    protected int getAmountOfElements(By by){
+        List elements = waitForElementsPresentBy(by,"Element not found", 5);
+        return elements.size();
+    }
 protected void swipeElementToLeft(By by, String error_message){
         WebElement element = waitForElementPresentBy(by, error_message, 10);
         int left_x = element.getLocation().getX();
