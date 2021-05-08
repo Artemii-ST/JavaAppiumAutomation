@@ -131,7 +131,7 @@ public class HomeWork {
     //Добавление 2 х статей в закладки в одну и ту же папку- а затем удаление 1 статьи из закладок при помощи свайпа нужного элемента
     //затем проверка того что осталась 2 статья
     //Перейти в нее и убелиться что title совпадает
-    public void AddArticleToBookmarkAndRemove(){
+    public void AddTooArticleToBookmarkAndRemove(){
         waitForElementByAndClick(
                 By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
                 "error: element skip_button - not found",
@@ -253,8 +253,57 @@ public class HomeWork {
 
 
     }
+    @Test
+    //Написать тест, который открывает статью и убеждается, что у нее есть элемент title.
+    // Важно: тест не должен дожидаться появления title, проверка должна производиться сразу.
+    // Если title не найден - тест падает с ошибкой. Метод можно назвать assertElementPresent.
+
+    //Тест заведомо провальный - так как елемент тайтла не успеет прогрузиться
+    //Что бы тест прошел успешно - нужно раскоментить Thread.sleep(1500);
+    public void testToArticleHaveTitle() throws InterruptedException {
+        waitForElementByAndClick(
+                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+                "error: element skip_button - not found",
+                5
+        );
+
+        waitForElementByAndClick(
+                By.xpath("//*[contains(@text, 'Поиск по Википедии')]"),
+                "error: text - Поиск по Википедии - not found",
+                5
+        );
+
+        waitForElementByAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                "java",
+                "error - not entered value",
+                15
+        );
+
+        waitForElementByAndClick(
+                By.xpath("//*[@text='JavaServer Pages']"),
+                "error: JavaServer Pages - not found",
+                15
+        );
+//        Thread.sleep(1500);
+        assertElementPresent(
+                By.xpath("//*[@text='JavaServer Pages']"),
+                "error: Title - JavaServer Pages - not open",
+                15
+        );
+    }
 
     //========================Methods=====================================
+
+    public void assertElementPresent(By by, String error_message, long timeoutInSecond){
+        List elements = driver.findElements(by);
+        int x =elements.size();
+        Assert.assertTrue(
+                error_message,
+                x>0
+        );
+
+    }
 
     protected void swipeElementToLeft(By by, String error_message){
         WebElement element = waitForElementPresentBy(by, error_message, 10);
