@@ -499,7 +499,7 @@ public class FirstTest {
                 15
         );
 
-        driver.runAppInBackground(Duration.ofSeconds(12));
+        //driver.runAppInBackground(Duration.ofSeconds(3));
 
 
 
@@ -509,6 +509,7 @@ public class FirstTest {
                 15
         );
     }
+
 
     //============================Methods==============================================
     private String waitForElementAndGetAttribute (By by, String attribute, String error_message){
