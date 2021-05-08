@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.ScreenOrientation;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -293,7 +294,81 @@ public class HomeWork {
         );
     }
 
+    @Test
+    //Ротация экрана и проверка атрибутов элемента до ротации и после.
+    //сделать так, чтобы после теста на поворот экрана сам экран всегда оказывался в правильном положении,
+    // даже если тест упал в тот момент, когда экран был наклонен
+    public void testCompareArticleTitleAndRotate(){
+        waitForElementByAndClick(
+                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+                "error: element skip_button - not found",
+                5
+        );
+
+        waitForElementByAndClick(
+                By.xpath("//*[contains(@text, 'Поиск по Википедии')]"),
+                "error: text - Поиск по Википедии - not found",
+                5
+        );
+
+        waitForElementByAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                "java",
+                "error - not entered value",
+                15
+        );
+
+        waitForElementByAndClick(
+                By.xpath("//*[@text='JavaServer Pages']"),
+                "error: JavaServer Pages - not found",
+                15
+        );
+        String beforeRotate = waitForElementAndGetAttribute(
+                By.xpath("//*[@text='JavaServer Pages']"),
+                "text",
+                "error: JavaServer Pages - not found"
+        );
+
+        driver.rotate(ScreenOrientation.LANDSCAPE);
+try {
+    String afterRotate = waitForElementAndGetAttribute(
+            By.xpath("//*[@text='JavaServer Pages']"),
+            "text",
+            "error: JavaServer Pages - not found"
+    );
+    Assert.assertEquals(
+            "elemets " + beforeRotate + " and " + afterRotate + " not Equals",
+            beforeRotate,
+            afterRotate
+    );
+} catch (Exception e){
+    driver.rotate(ScreenOrientation.PORTRAIT);
+    e.printStackTrace();
+    Assert.assertFalse(e.getStackTrace().length>0);
+}
+
+
+        driver.rotate(ScreenOrientation.PORTRAIT);
+
+        String afterRotate_second_rotate = waitForElementAndGetAttribute(
+                By.xpath("//*[@text='JavaServer Pages']"),
+                "text",
+                "error: JavaServer Pages - not found"
+        );
+        Assert.assertEquals(
+                "elemets " + beforeRotate + " and " + afterRotate_second_rotate + " not Equals",
+                beforeRotate,
+                afterRotate_second_rotate
+        );
+
+    }
+
     //========================Methods=====================================
+
+    private String waitForElementAndGetAttribute (By by, String attribute, String error_message){
+        String attributeElement = waitForElementPresentBy(by, error_message, 10).getAttribute(attribute);
+        return attributeElement;
+    }
 
     public void assertElementPresent(By by, String error_message, long timeoutInSecond){
         List elements = driver.findElements(by);
