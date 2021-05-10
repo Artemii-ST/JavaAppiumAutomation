@@ -1,47 +1,25 @@
-import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
-import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.PointOption;
-import org.junit.After;
+import lib.CoreTestCase;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.ScreenOrientation;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.net.URL;
 import java.time.Duration;
 import java.util.List;
 
 import static java.time.Duration.ofMillis;
 
-public class FirstTest {
-    private AppiumDriver driver;
-    @Before
-    public void setUp() throws Exception {
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability("platformName","Android");
-        capabilities.setCapability("deviceName","OnePlus");
-        capabilities.setCapability("platformVersion","10");
-        capabilities.setCapability("automationName","Appium");
-        capabilities.setCapability("appPackage","org.wikipedia");
-        capabilities.setCapability("appActivity",".main.MainActivity");
-        capabilities.setCapability("app","/users/artem/Desktop/JavaAppiumAutomation/apks/org.wikipedia.apk");
+public class FirstTest extends CoreTestCase {
 
-        driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
-    }
-    @After
-    public void tearDown(){
-        driver.quit();
-    }
     @Test
-    public void firstTest(){
+    public void testStartSearch(){
         waitForElementByAndClick(
                 By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
                 "error: element skip_button - not found",
@@ -68,7 +46,7 @@ public class FirstTest {
         );
     }
     @Test
-    public void cancelSearch(){
+    public void testCancelSearch(){
         waitForElementByAndClick(
                 By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
                 "error: element skip_button - not found",
@@ -103,7 +81,7 @@ public class FirstTest {
 
     }
     @Test
-    public void clearSearch(){
+    public void testClearSearch(){
         waitForElementByAndClick(
                 By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
                 "error: element skip_button - not found",
@@ -215,7 +193,7 @@ public class FirstTest {
         swipeScreen(Direction.UP);
     }
     @Test // Поиск элемента на экране - делаем свайпы до тех пор пока нужный элемент не покажется на экране
-    public void swipeUpToFindElementInPage(){
+    public void testSwipeUpToFindElementInPage(){
         waitForElementByAndClick(
                 By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
                 "error: element skip_button - not found",
@@ -249,7 +227,7 @@ public class FirstTest {
     @Test
     //Добавление статьи в закладки - а затем удаление ее из закладок при помощи свайпа нужного элемента
     //затем проверка того что удаленный элемент пропал с экрана
-    public void AddArticleToBookmarkAndRemove(){
+    public void testAddArticleToBookmarkAndRemove(){
         waitForElementByAndClick(
                 By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
                 "error: element skip_button - not found",
@@ -473,7 +451,7 @@ public class FirstTest {
     // Original error: Could not get focusPackageAndActivity.
     // Original error: Could not parse activity from dumpsys (WARNING: The server did not provide any stacktrace information)
     //Command duration or timeout: 0 milliseconds
-    public void checkRunAppInBackgroundAndCheckTitleArticle(){
+    public void testCheckRunAppInBackgroundAndCheckTitleArticle(){
         waitForElementByAndClick(
                 By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
                 "error: element skip_button - not found",
