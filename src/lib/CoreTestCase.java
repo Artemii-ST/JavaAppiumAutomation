@@ -11,8 +11,8 @@ public class CoreTestCase extends TestCase {
     protected AppiumDriver driver;
     private static String AppiumURL = "http://127.0.0.1:4723/wd/hub";
     @Override
-    public void setUp() throws Exception {
-        super.setUp();
+    protected void setUp() throws Exception {
+        //super.setUp();
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability("platformName","Android");
         capabilities.setCapability("deviceName","OnePlus");
@@ -26,7 +26,7 @@ public class CoreTestCase extends TestCase {
         driver = new AndroidDriver(new URL(AppiumURL), capabilities);
     }
     @Override
-    public void tearDown() throws Exception {
+    protected void tearDown() throws Exception {
         super.tearDown();
         driver.quit();
     }
