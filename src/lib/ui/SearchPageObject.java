@@ -54,4 +54,11 @@ public class SearchPageObject extends MainPageObject{
                 5
         );
     }
+    public void clearInputSearch(){
+        this.waitForElementByAndClear(
+                By.id(SEARCH_INPUT),
+                "error - element is not clear",
+                5
+        );
+    }
 }
