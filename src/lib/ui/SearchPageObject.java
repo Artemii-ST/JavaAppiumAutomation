@@ -7,6 +7,7 @@ public class SearchPageObject extends MainPageObject{
     private static final String
     SEARCH_INT_ELEMENT = "//*[contains(@text, 'Поиск по Википедии')]",
     SEARCH_INPUT = "org.wikipedia:id/search_src_text",
+    SEARCH_CANCEL_BUTTON = "org.wikipedia:id/search_close_btn",
     SEARCH_RESULT_BY_SUBSTRING_TPL = "//*[@text='{SUBSTRING}']";
 
     public SearchPageObject(AppiumDriver driver){
@@ -37,6 +38,20 @@ public class SearchPageObject extends MainPageObject{
                 By.xpath(search_result_xpath),
                 "error: Cannot find result with substring: " + substring,
                 15
+        );
+    }
+    public void clickToCloseButton(){
+        this.waitForElementByAndClick(
+                By.id(SEARCH_CANCEL_BUTTON),
+                "error: Cannot find search_close_btn",
+                5
+        );
+    }
+    public void clickSearchGoToBack(){
+        this.waitForElementNotPresentBy(
+        By.id("android.widget.ImageButton"),
+                "error: element go to back found",
+                5
         );
     }
 }

@@ -20,8 +20,7 @@ public class FirstTest extends CoreTestCase {
 
     @Test
     public void testStartSearch(){
-        OnboardingPageObject onboardingPageObject = new OnboardingPageObject(driver);
-        onboardingPageObject.justSkip();
+        new OnboardingPageObject(driver).justSkip();
 
         SearchPageObject searchPageObject = new SearchPageObject(driver);
         searchPageObject.initSearchInput();
@@ -30,38 +29,13 @@ public class FirstTest extends CoreTestCase {
     }
     @Test
     public void testCancelSearch(){
-        MainPageObject.waitForElementByAndClick(
-                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
-                "error: element skip_button - not found",
-                5
-        );
+        new OnboardingPageObject(driver).justSkip();
 
-        MainPageObject.waitForElementByAndClick(
-                By.xpath("//*[contains(@text, 'Поиск по Википедии')]"),
-                "error: text - Поиск по Википедии - not found",
-                5
-        );
-
-        MainPageObject.waitForElementByAndSendKeys(
-                By.id("org.wikipedia:id/search_src_text"),
-                "java",
-                "error - not entered value",
-                15
-        );
-
-        MainPageObject.waitForElementByAndClick(
-                By.className("android.widget.ImageButton"),
-                "error: element go to back not found",
-                5
-        );
-
-        MainPageObject.waitForElementNotPresentBy(
-                By.id("android.widget.ImageButton"),
-                "error: element go to back found",
-                5
-        );
-
-
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        searchPageObject.initSearchInput();
+        searchPageObject.typeInInput("apple");
+        searchPageObject.clickToCloseButton();
+        searchPageObject.clickSearchGoToBack();
     }
     @Test
     public void testClearSearch(){
