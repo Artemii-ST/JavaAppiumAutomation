@@ -1,6 +1,7 @@
-import com.sun.javafx.scene.traversal.Direction;
 import lib.CoreTestCase;
 import lib.ui.MainPageObject;
+import lib.ui.OnboardingPageObject;
+import lib.ui.SearchPageObject;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -19,31 +20,13 @@ public class FirstTest extends CoreTestCase {
 
     @Test
     public void testStartSearch(){
+        OnboardingPageObject onboardingPageObject = new OnboardingPageObject(driver);
+        onboardingPageObject.justSkip();
 
-        MainPageObject.waitForElementByAndClick(
-                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
-                "error: element skip_button - not found",
-                5
-        );
-
-        MainPageObject.waitForElementByAndClick(
-                By.xpath("//*[contains(@text, 'Поиск по Википедии')]"),
-                "error: text - Поиск по Википедии - not found",
-                5
-        );
-
-        MainPageObject.waitForElementByAndSendKeys(
-                By.id("org.wikipedia:id/search_src_text"),
-                "java",
-                "error - not entered value",
-                15
-        );
-
-        MainPageObject.waitForElementPresentBy(
-                By.xpath("//*[@text='JavaServer Pages']"),
-                "error: JavaServer Pages - not found",
-                15
-        );
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        searchPageObject.initSearchInput();
+        searchPageObject.typeInInput("apple");
+        searchPageObject.waitForSearchResult("Apple Watch");
     }
     @Test
     public void testCancelSearch(){
@@ -161,9 +144,9 @@ public class FirstTest extends CoreTestCase {
     @Test
     public void testSwipeUp(){
 
-        MainPageObject.swipeScreen(Direction.LEFT);
-        MainPageObject.swipeScreen(Direction.LEFT);
-        MainPageObject.swipeScreen(Direction.LEFT);
+        MainPageObject.swipeScreen(lib.ui.MainPageObject.Direction.LEFT);
+        MainPageObject.swipeScreen(lib.ui.MainPageObject.Direction.LEFT);
+        MainPageObject.swipeScreen(lib.ui.MainPageObject.Direction.LEFT);
 
         MainPageObject.waitForElementByAndClick(
                 By.id("org.wikipedia:id/fragment_onboarding_done_button"),
@@ -189,8 +172,8 @@ public class FirstTest extends CoreTestCase {
                 "error: JavaServer Pages - not found",
                 15
         );
-        MainPageObject.swipeScreen(Direction.UP);
-        MainPageObject.swipeScreen(Direction.UP);
+        MainPageObject.swipeScreen(lib.ui.MainPageObject.Direction.UP);
+        MainPageObject.swipeScreen(lib.ui.MainPageObject.Direction.UP);
     }
     @Test // Поиск элемента на экране - делаем свайпы до тех пор пока нужный элемент не покажется на экране
     public void testSwipeUpToFindElementInPage(){

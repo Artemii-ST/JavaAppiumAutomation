@@ -113,7 +113,7 @@ public class MainPageObject {
             new TouchAction(driver)
                     .press(pointOptionStart)
                     // a bit more reliable when we add small wait
-                    .waitAction(WaitOptions.waitOptions(ofMillis(PRESS_TIME)))
+                    .waitAction(WaitOptions.waitOptions(Duration.ofMillis(PRESS_TIME)))
                     .moveTo(pointOptionEnd)
                     .release().perform();
         } catch (Exception e) {
@@ -129,9 +129,6 @@ public class MainPageObject {
         }
     }
 
-    public void swipeScreen(com.sun.javafx.scene.traversal.Direction up) {
-    }
-
 
     public enum Direction {
         UP,
@@ -139,6 +136,7 @@ public class MainPageObject {
         LEFT,
         RIGHT;
     }
+
 
     //==========================================================================
 
