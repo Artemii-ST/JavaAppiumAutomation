@@ -1,4 +1,5 @@
 import lib.CoreTestCase;
+import lib.ui.ArticlePageObject;
 import lib.ui.MainPageObject;
 import lib.ui.OnboardingPageObject;
 import lib.ui.SearchPageObject;
@@ -6,7 +7,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ScreenOrientation;
-import org.openqa.selenium.WebElement;
 
 public class FirstTest extends CoreTestCase {
     private MainPageObject MainPageObject;
@@ -50,37 +50,16 @@ public class FirstTest extends CoreTestCase {
     }
     @Test
     public void testCompareArticleTitle(){
-        MainPageObject.waitForElementByAndClick(
-                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
-                "error: element skip_button - not found",
-                5
-        );
+        new OnboardingPageObject(driver).justSkip();
 
-        MainPageObject.waitForElementByAndClick(
-                By.xpath("//*[contains(@text, 'Поиск по Википедии')]"),
-                "error: text - Поиск по Википедии - not found",
-                5
-        );
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        searchPageObject.initSearchInput();
+        searchPageObject.typeInInput("java");
+        searchPageObject.waitForNeedSearchResultAndClick("JavaServer Pages");
 
-        MainPageObject.waitForElementByAndSendKeys(
-                By.id("org.wikipedia:id/search_src_text"),
-                "java",
-                "error - not entered value",
-                15
-        );
+        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
 
-        MainPageObject.waitForElementByAndClick(
-                By.xpath("//*[@text='JavaServer Pages']"),
-                "error: JavaServer Pages - not found",
-                15
-        );
-
-        WebElement title_element = MainPageObject.waitForElementPresentBy(
-                By.xpath("//*[@text='JavaServer Pages']"),
-                "error: JavaServer Pages - not open",
-                15
-        );
-        String article_title = title_element.getAttribute("text");
+        String article_title = articlePageObject.getArticleTitle("JavaServer Pages");
         Assert.assertEquals(
                 "expected text not found",
                 "JavaServer Pages",
@@ -90,36 +69,18 @@ public class FirstTest extends CoreTestCase {
     @Test
     public void testSwipeUp(){
 
-        MainPageObject.swipeScreen(lib.ui.MainPageObject.Direction.LEFT);
-        MainPageObject.swipeScreen(lib.ui.MainPageObject.Direction.LEFT);
-        MainPageObject.swipeScreen(lib.ui.MainPageObject.Direction.LEFT);
-
-        MainPageObject.waitForElementByAndClick(
-                By.id("org.wikipedia:id/fragment_onboarding_done_button"),
-                "error: element skip_button - not found",
-                5
-        );
-
-        MainPageObject.waitForElementByAndClick(
-                By.xpath("//*[contains(@text, 'Поиск по Википедии')]"),
-                "error: text - Поиск по Википедии - not found",
-                5
-        );
-
-        MainPageObject.waitForElementByAndSendKeys(
-                By.id("org.wikipedia:id/search_src_text"),
-                "java",
-                "error - not entered value",
-                15
-        );
-
-        MainPageObject.waitForElementByAndClick(
-                By.xpath("//*[@text='JavaServer Pages']"),
-                "error: JavaServer Pages - not found",
-                15
-        );
-        MainPageObject.swipeScreen(lib.ui.MainPageObject.Direction.UP);
-        MainPageObject.swipeScreen(lib.ui.MainPageObject.Direction.UP);
+        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        articlePageObject.swipeLEFT();
+        articlePageObject.swipeLEFT();
+        articlePageObject.swipeLEFT();
+        new OnboardingPageObject(driver).clickStartButton();
+        
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        searchPageObject.initSearchInput();
+        searchPageObject.typeInInput("java");
+        searchPageObject.waitForNeedSearchResultAndClick("JavaFX");
+        articlePageObject.swipeUP();
+        articlePageObject.swipeUP();
     }
     @Test // Поиск элемента на экране - делаем свайпы до тех пор пока нужный элемент не покажется на экране
     public void testSwipeUpToFindElementInPage(){

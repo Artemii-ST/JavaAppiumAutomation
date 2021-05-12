@@ -24,4 +24,11 @@ public class OnboardingPageObject extends MainPageObject {
                 5
         );
     }
+    public void clickStartButton(){
+        this.waitForElementByAndClick(
+                By.id(START_BUTTON),
+                "error: element done_button - not found",
+                5
+        );
+    }
 }

@@ -61,4 +61,12 @@ public class SearchPageObject extends MainPageObject{
                 5
         );
     }
+    public void waitForNeedSearchResultAndClick(String substring){
+        String search_result_xpath = getResultSearchElement(substring);
+        this.waitForElementByAndClick(
+                By.xpath(search_result_xpath),
+                "error: Cannot find need result with substring: " + substring + " and click",
+                15
+        );
+    }
 }
