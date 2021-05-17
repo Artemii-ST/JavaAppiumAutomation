@@ -8,7 +8,8 @@ public class SearchPageObject extends MainPageObject{
     SEARCH_INT_ELEMENT = "//*[contains(@text, 'Поиск по Википедии')]",
     SEARCH_INPUT = "org.wikipedia:id/search_src_text",
     SEARCH_CANCEL_BUTTON = "org.wikipedia:id/search_close_btn",
-    SEARCH_RESULT_BY_SUBSTRING_TPL = "//*[@text='{SUBSTRING}']";
+    SEARCH_RESULT_BY_SUBSTRING_TPL = "//*[@text='{SUBSTRING}']",
+    LIST_ITEM_TITLE = "org.wikipedia:id/page_list_item_title";
 
     public SearchPageObject(AppiumDriver driver){
         super(driver);
@@ -69,4 +70,18 @@ public class SearchPageObject extends MainPageObject{
                 15
         );
     }
+    public void swipeUpToFindNeedElement(String name_element){
+        this.swipeUpToFindElement(
+                By.xpath("//*[@text='"+name_element+"']"),
+                //By.id("Директива_JSP_taglib"),
+                "error: "+name_element+" - not found",
+                5
+        );
+    }
+    public int getAmountElementsInSearchList() throws InterruptedException {
+        return this.getAmountOfElements(
+                By.id(LIST_ITEM_TITLE)
+        );
+    }
+
 }
