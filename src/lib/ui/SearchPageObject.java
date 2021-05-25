@@ -75,7 +75,7 @@ public class SearchPageObject extends MainPageObject{
                 By.xpath("//*[@text='"+name_element+"']"),
                 //By.id("Директива_JSP_taglib"),
                 "error: "+name_element+" - not found",
-                5
+                9
         );
     }
     public int getAmountElementsInSearchList() throws InterruptedException {
